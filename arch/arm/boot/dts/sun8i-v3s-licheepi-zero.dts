@@ -43,6 +43,7 @@
 /dts-v1/;
 #include "sun8i-v3s.dtsi"
 #include "sunxi-common-regulators.dtsi"
+#include <dt-bindings/input/input.h>
 
 / {
 	model = "Lichee Pi Zero";
@@ -50,44 +51,70 @@
 
 	aliases {
 		serial0 = &uart0;
+		ethernet0 = &emac;
 	};
 
 	chosen {
 		//stdout-path = "serial0:115200n8";
-		bootargs = "console=ttyS0,115200 earlyprintk panic=5 rootwait mtdparts=spi0.0:1M(uboot)ro,128k(dtb)ro,5M(kernel)ro,-(rootfs) ubi.mtd=3 root=ubi0:rootfs rw rootfstype=ubifs";
+		//bootargs = "console=ttyS0,115200 earlyprintk panic=5 rootwait mtdparts=spi0.0:1M(uboot)ro,128k(dtb)ro,5M(kernel)ro,80M(rootfs),30M(data) ubi.mtd=3 root=ubi0:rootfs rw rootfstype=ubifs";
+		bootargs = "console=ttyS0,115200 earlyprintk panic=5 rootwait mtdparts=spi0.0:1M(uboot)ro,128k(dtb)ro,5M(kernel)ro,58M(rootfs),180M(data) ubi.mtd=3 root=ubi0:rootfs rw rootfstype=ubifs";
+
 	};
 
 	leds {
 		compatible = "gpio-leds";
+		//status = "okay";
+		status = "disabled";
 
-		blue_led {
-			label = "licheepi:blue:usr";
-			gpios = <&pio 6 1 GPIO_ACTIVE_LOW>; /* PG1 */
+		v3s_led {
+			label = "v3s_led";
+			gpios = <&pio 1 4 GPIO_ACTIVE_LOW>; /* PG1 */
 		};
 
-		green_led {
-			label = "licheepi:green:usr";
-			gpios = <&pio 6 0 GPIO_ACTIVE_LOW>; /* PG0 */
-			default-state = "on";
-		};
+		//blue_led {
+		//	label = "licheepi:blue:usr";
+		//	gpios = <&pio 6 1 GPIO_ACTIVE_LOW>; /* PG1 */
+		//};
 
-		red_led {
-			label = "licheepi:red:usr";
-			gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
-		};
+		//green_led {
+		//	label = "licheepi:green:usr";
+		//	gpios = <&pio 6 0 GPIO_ACTIVE_LOW>; /* PG0 */
+		//	default-state = "on";
+		//};
+
+		//red_led {
+		//	label = "licheepi:red:usr";
+		//	gpios = <&pio 6 2 GPIO_ACTIVE_LOW>; /* PG2 */
+		//};
 	};
+	
+	gpio_keys {
+        	compatible = "gpio-keys-polled";
+        	pinctrl-names = "default";
+        	//pinctrl-0 = <&key_pins>;
+        	#address-cells = <1>;
+        	#size-cells = <0>;
+		poll-interval = <20>;
+        	autorepeat;
+        	button@0 {
+                	label = "Key 1";
+                	linux,code = <KEY_1>;
+                	gpios = <&pio 5 3 GPIO_ACTIVE_LOW>; 
+        	};
+	};
+	
 };
 
 &ehci0 {
 	status = "okay";
 };
 
-&mmc0 {
+/*&mmc0 {
 	broken-cd;
 	bus-width = <4>;
 	vmmc-supply = <&reg_vcc3v3>;
 	status = "okay";
-};
+};*/
 
 &i2c0 {
 	status = "okay";
@@ -96,6 +123,11 @@
 		compatible = "nsiway,ns2009";
 		reg = <0x48>;
 	};
+	
+	rtc@51 {
+        	compatible = "nxp,pcf8563";
+        	reg = <0x51>;
+    	};
 };
 
 &spi0 {
@@ -128,7 +160,12 @@
  
 		partition@620000 {
 			label = "rootfs";
-			reg = <0x620000 0x79E0000>;
+			reg = <0x620000 0x3A00000>;
+		};
+		
+		partition@2E20000 {
+			label = "data";
+			reg = <0x4020000 0xB400000>;
 		};
 	};
 };
@@ -143,6 +180,12 @@
 	status = "okay";
 };
 
+&uart2 { 
+	pinctrl-0 = <&uart2_pb_pins>;
+	pinctrl-names = "default";
+	status = "okay"; 
+};
+
 &usb_otg {
 	dr_mode = "otg";
 	status = "okay";
@@ -151,4 +194,27 @@
 &usbphy {
 	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
 	status = "okay";
+};
+
+&emac {
+        phy-handle = <&int_mii_phy>;
+        phy-mode = "mii";
+        allwinner,leds-active-low;
+        status = "okay";
+};
+
+&mmc1 {
+        broken-cd;
+        bus-width = <4>;
+        vmmc-supply = <&reg_vcc3v3>;
+        status = "okay";
+};
+
+&codec {
+        allwinner,audio-routing =
+                "Headphone", "HP",
+                "Headphone", "HPCOM",
+                "MIC1", "Mic",
+                "Mic",  "HBIAS";
+        status = "okay";
 };

@@ -55,7 +55,8 @@
 
 	leds {
 		/* The LEDs use PG0~2 pins, which conflict with MMC1 */
-		status = "disabled";
+		//status = "disabled";
+		status = "okay";
 	};
 };
 

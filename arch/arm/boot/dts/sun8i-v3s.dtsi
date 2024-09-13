@@ -202,7 +202,7 @@
 			#dma-cells = <1>;
 		};
 
-		mmc0: mmc@1c0f000 {
+		/*mmc0: mmc@1c0f000 {
 			compatible = "allwinner,sun7i-a20-mmc";
 			reg = <0x01c0f000 0x1000>;
 			clocks = <&ccu CLK_BUS_MMC0>,
@@ -221,7 +221,7 @@
 			status = "disabled";
 			#address-cells = <1>;
 			#size-cells = <0>;
-		};
+		};*/
 
 		mmc1: mmc@1c10000 {
 			compatible = "allwinner,sun7i-a20-mmc";
@@ -360,6 +360,11 @@
 				function = "uart0";
 			};
 
+			uart2_pb_pins: uart2-pb-pins {
+				pins = "PB0", "PB1";
+				function = "uart2";
+			};	
+
 			lcd_rgb666_pins_a: lcd-rgb666-pe {
 				pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5",
 				       "PE6", "PE7", "PE8", "PE9", "PE10", "PE11",
@@ -368,13 +373,13 @@
 				function = "lcd";
 			};
 
-			mmc0_pins: mmc0-pins {
+			/*mmc0_pins: mmc0-pins {
 				pins = "PF0", "PF1", "PF2", "PF3",
 				       "PF4", "PF5";
 				function = "mmc0";
 				drive-strength = <30>;
 				bias-pull-up;
-			};
+			};*/
 
 			mmc1_pins: mmc1-pins {
 				pins = "PG0", "PG1", "PG2", "PG3",
@@ -388,7 +393,22 @@
 				pins = "PC0", "PC1", "PC2", "PC3";
 				function = "spi0";
 			};
+			
+			key_pins: key_pins@0 {
+                       		pins = "PF3";
+                                function = "gpio_in";
+                 		bias-pull-up;
+		        };
 		};
+
+		/*
+		key_pins: key_pins@0 {
+                        pins = "PF3";
+                        function = "gpio_in";
+			allwinner,drive = <0>;
+			allwinner,pull = <1>;
+                };
+		*/	
 
 		timer@1c20c00 {
 			compatible = "allwinner,sun4i-a10-timer";

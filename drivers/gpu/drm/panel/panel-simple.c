@@ -2472,6 +2472,22 @@ static const struct panel_desc tpk_f10a_0102 = {
 	},
 };
 
+#if 1
+static const struct display_timing urt_umsh_8596md_timing = {
+        .pixelclock = { 30000000, 30000000, 30000000 },
+        .hactive = { 640, 640, 640 },
+        .hfront_porch = { 2, 2, 2 },
+        .hback_porch = { 2, 2, 2 },
+        .hsync_len = { 1, 1, 1 },
+        .vactive = { 1280, 1280, 1280 },
+        .vfront_porch = { 2, 2, 2 },
+        .vback_porch = { 2, 2, 2 },
+        .vsync_len = { 1, 1, 1 },
+        .flags = DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_NEGEDGE |
+                DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
+};
+
+#else
 static const struct display_timing urt_umsh_8596md_timing = {
 	.pixelclock = { 33260000, 33260000, 33260000 },
 	.hactive = { 800, 800, 800 },
@@ -2485,6 +2501,7 @@ static const struct display_timing urt_umsh_8596md_timing = {
 	.flags = DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_NEGEDGE |
 		DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
 };
+#endif
 
 static const struct panel_desc urt_umsh_8596md_lvds = {
 	.timings = &urt_umsh_8596md_timing,
